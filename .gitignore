@@ -1,10 +1,35 @@
-# Rider
+# Rider/IDE
 .idea/
 *.user
+*.userprefs
+*.suo
+*.jetbrains
+*.vs/
 
-# Binarios
+# Binarios y builds
 bin/
 obj/
+Debug/
+Release/
+*.dll
+*.pdb
+*.exe
+
+# Dependencias
+packages/
+.nuget/
 
 # Configuraciones sensibles
 appsettings.Development.json
+appsettings.private.*
+secrets.json
+
+# Archivos de usuario
+*.csproj.user
+
+# Misc
+.vs/
+.suo
+*.swp
+*.cache
+*.log
