@@ -1,0 +1,10 @@
+# Rider
+.idea/
+*.user
+
+# Binarios
+bin/
+obj/
+
+# Configuraciones sensibles
+appsettings.Development.json
