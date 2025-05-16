@@ -1,4 +1,5 @@
 using Lab8_Bernaola_Pacheco.Data;
+using Lab8_Bernaola_Pacheco.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lab8_Bernaola_Pacheco.Controllers;
@@ -79,4 +80,47 @@ public class ClientsController : ControllerBase
         }
     }
     
+    //lab9
+    [HttpGet("with-orders")]
+    public IActionResult GetClientsWithOrders()
+    {
+        try
+        {
+            var clients = _unitOfWork.Repository.GetClientsWithOrders();
+
+            if (!clients.Any())
+            {
+                return NotFound("No se encontraron clientes con pedidos.");
+            }
+
+            return Ok(clients);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener clientes con pedidos");
+            return StatusCode(500, "Error interno del servidor");
+        }
+    }
+    
+    [HttpGet("orders-with-details")]
+    public IActionResult GetOrdersWithDetails()
+    {
+        var orders = _unitOfWork.Repository.GetOrdersWithDetails();
+        return orders.Any() ? Ok(orders) : NotFound("No se encontraron pedidos con detalles.");
+    }
+
+    [HttpGet("product-summary")]
+    public IActionResult GetClientsWithProductCount()
+    {
+        var result = _unitOfWork.Repository.GetClientsWithProductCount();
+        return Ok(result);
+    }
+    
+    [HttpGet("sales-summary")]
+    public IActionResult GetSalesByClient()
+    {
+        var result = _unitOfWork.Repository.GetSalesByClient();
+        return Ok(result);
+    }
+
 }

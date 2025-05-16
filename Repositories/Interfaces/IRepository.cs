@@ -17,4 +17,8 @@ public interface IRepository
     IEnumerable<dynamic> GetAllOrdersWithDetails();
     IEnumerable<string> GetProductsSoldToClient(int clientId);
     IEnumerable<string> GetClientsWhoPurchasedProduct(int productId);
+    List<ClientOrderDto> GetClientsWithOrders();
+    List<OrderDetailsDto> GetOrdersWithDetails();
+    List<ClientProductSummaryDto> GetClientsWithProductCount();
+    List<SalesByClientDto> GetSalesByClient();
 }

@@ -1,4 +1,5 @@
 using Lab8_Bernaola_Pacheco.Data;
+using Lab8_Bernaola_Pacheco.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
-
 
 // Registro de UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

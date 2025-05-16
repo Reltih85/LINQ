@@ -150,4 +150,76 @@ public class Repository : IRepository
             .Distinct()                             
             .ToList();
     }
+    
+    public List<ClientOrderDto> GetClientsWithOrders()
+    {
+        var clientOrders = _context.Clients
+            .AsNoTracking()
+            .Select(client => new ClientOrderDto
+            {
+                ClientName = client.Name,
+                Orders = client.Orders
+                    .Select(order => new OrderDto
+                    {
+                        OrderId = order.OrderId,
+                        OrderDate = order.OrderDate
+                    }).ToList()
+            }).ToList();
+        return clientOrders;
+    }
+    
+    public List<OrderDetailsDto> GetOrdersWithDetails()
+    {
+        var ordersWithDetails = _context.Orders
+            .Include(order => order.Orderdetails)
+            .ThenInclude(orderDetail => orderDetail.Product)
+            .AsNoTracking()
+            .Select(order => new OrderDetailsDto
+            {
+                OrderId = order.OrderId,
+                OrderDate = order.OrderDate,
+                Products = order.Orderdetails
+                    .Select(od => new ProductDto
+                    {
+                        ProductName = od.Product.Name,
+                        Quantity = od.Quantity,
+                        Price = od.Product.Price
+                    }).ToList()
+            }).ToList();
+
+        return ordersWithDetails;
+    }
+    
+    public List<ClientProductSummaryDto> GetClientsWithProductCount()
+    {
+        return _context.Clients
+            .AsNoTracking()
+            .Select(client => new ClientProductSummaryDto
+            {
+                ClientName = client.Name,
+                TotalProducts = client.Orders
+                    .Sum(order => order.Orderdetails
+                        .Sum(detail => detail.Quantity))
+            })
+            .ToList();
+    }
+    
+    public List<SalesByClientDto> GetSalesByClient()
+    {
+        return _context.Orders
+            .Include(order => order.Orderdetails)
+            .ThenInclude(orderDetail => orderDetail.Product)
+            .AsNoTracking()
+            .GroupBy(order => order.ClientId)
+            .Select(group => new SalesByClientDto
+            {
+                ClientName = _context.Clients
+                    .FirstOrDefault(c => c.ClientId == group.Key).Name,
+                TotalSales = group.Sum(order => order.Orderdetails
+                    .Sum(detail => detail.Quantity * detail.Product.Price))
+            })
+            .OrderByDescending(s => s.TotalSales)
+            .ToList();
+    }
+
 }
